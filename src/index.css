@@ -1,0 +1,6 @@
+@import "tailwindcss";
+p,
+span {
+  color: azure;
+  font-size: 18px;
+}
