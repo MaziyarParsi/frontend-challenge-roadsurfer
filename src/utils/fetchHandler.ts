@@ -4,6 +4,7 @@ export const fetchHandler = <T>(url: string): Promise<T> => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+      // console.log("response", response.json());
       return response.json() as Promise<T>;
     })
     .catch((error) => {

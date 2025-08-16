@@ -3,16 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getStations } from "./services/api";
 import { Autocomplete } from "./components";
 import WeekView from "./components/Calendar/WeekView";
-interface Station {
-  id: string;
-  name: string;
-  bookings: Array<{
-    id: string;
-    startDate: string;
-    endDate: string;
-    pickupReturnStationId: string;
-  }>;
-}
+import type { Station } from "./services/api";
 
 function App() {
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
@@ -114,6 +105,7 @@ function App() {
                 </div>
                 <WeekView
                   selectedStation={selectedStation}
+                  stations={stations}
                   onBookingClick={() => {}}
                 />
               </>

@@ -1,6 +1,9 @@
+import { useState } from "react";
 import useWeek from "../../hooks/useWeek";
 import DayTile from "./DayTile";
 import useMediaQuery from "../../hooks/useMediaQuery";
+import Modal from "../Modal/Modal";
+import BookingDetails from "../Modal/BookingDetails";
 
 interface Station {
   id: string;
@@ -22,12 +25,27 @@ interface Booking {
 
 interface WeekViewProps {
   selectedStation: Station;
-  onBookingClick: (booking: Booking) => void;
+  stations: Station[];
+  onBookingClick?: (booking: Booking) => void;
 }
 
-const WeekView = ({ selectedStation, onBookingClick }: WeekViewProps) => {
+const WeekView = ({
+  selectedStation,
+  stations,
+  onBookingClick,
+}: WeekViewProps) => {
   const { week, nextWeek, prevWeek } = useWeek();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+
+  const handleBookingClick = (booking: Booking) => {
+    setSelectedBooking(booking);
+    onBookingClick?.(booking);
+  };
+
+  const closeModal = () => {
+    setSelectedBooking(null);
+  };
 
   const bookings = selectedStation.bookings || [];
 
@@ -88,19 +106,19 @@ const WeekView = ({ selectedStation, onBookingClick }: WeekViewProps) => {
         {week.map(({ day, date, fullDate }) => {
           const dayBookings = bookings.filter((booking) => {
             try {
-              const startDate = new Date(booking.startDate);
-              const endDate = new Date(booking.endDate);
-              const dayDate = fullDate;
+              const startDate = new Date(
+                new Date(booking.startDate).toDateString()
+              );
+              const endDate = new Date(
+                new Date(booking.endDate).toDateString()
+              );
+              const dayDate = new Date(fullDate.toDateString());
 
               if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
                 return false;
               }
 
-              return (
-                startDate.toDateString() === dayDate.toDateString() ||
-                endDate.toDateString() === dayDate.toDateString() ||
-                (startDate <= dayDate && endDate >= dayDate)
-              );
+              return dayDate >= startDate && dayDate <= endDate;
             } catch {
               return false;
             }
@@ -113,11 +131,21 @@ const WeekView = ({ selectedStation, onBookingClick }: WeekViewProps) => {
               date={date}
               fullDate={fullDate}
               bookings={dayBookings}
-              onBookingClick={onBookingClick}
+              onBookingClick={handleBookingClick}
             />
           );
         })}
       </div>
+      {selectedBooking && (
+        <Modal isOpen={!!selectedBooking} onClose={closeModal}>
+          <BookingDetails
+            bookingId={selectedBooking.id}
+            stationId={selectedStation.id}
+            stations={stations}
+            onClose={closeModal}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

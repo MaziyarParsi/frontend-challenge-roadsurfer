@@ -1,8 +1,24 @@
-import axios from "axios";
+import { fetchHandler } from "../utils/fetchHandler";
 
 const API_URL = "https://605c94c36d85de00170da8b4.mockapi.io/stations";
 
-export const getStations = async () => {
-  const { data } = await axios.get(API_URL);
-  return data;
+export type Station = {
+  id: string;
+  name: string;
+  bookings: Array<{
+    id: string;
+    startDate: string;
+    endDate: string;
+    pickupReturnStationId: string;
+  }>;
+};
+
+export const getStations = () => {
+  return fetchHandler<Station[]>(API_URL);
+};
+
+export const getBookingDetails = (stationId: string, bookingId: string) => {
+  return fetchHandler<Station["bookings"]>(
+    `${API_URL}/${stationId}/bookings/${bookingId}`
+  );
 };
