@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getStations } from "./services/api";
+import { useStations } from "./queries/useStations";
 import { Autocomplete } from "./components";
 import WeekView from "./components/Calendar/WeekView";
 import type { Station } from "./services/api";
@@ -10,15 +9,7 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const {
-    data: stations = [],
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["stations"],
-    queryFn: getStations,
-    retry: 1,
-  });
+  const { data: stations = [], isLoading, error } = useStations();
 
   const filteredSuggestions = useMemo(() => {
     if (!inputValue || !showSuggestions) return [];
