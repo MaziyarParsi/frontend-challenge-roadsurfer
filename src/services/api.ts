@@ -10,6 +10,7 @@ export type Station = {
     startDate: string;
     endDate: string;
     pickupReturnStationId: string;
+    customerName: string;
   }>;
 };
 
@@ -18,7 +19,7 @@ export const getStations = () => {
 };
 
 export const getBookingDetails = (stationId: string, bookingId: string) => {
-  return fetchHandler<Station["bookings"]>(
+  return fetchHandler<Station["bookings"][0]>(
     `${API_URL}/${stationId}/bookings/${bookingId}`
   );
 };

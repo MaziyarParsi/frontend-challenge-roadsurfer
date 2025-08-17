@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import { getBookingDetails } from "../../services/api";
-
-interface Station {
-  id: string;
-  name: string;
-}
+import { getBookingDetails, type Station } from "../../services/api";
 
 interface BookingDetailsProps {
   bookingId: string;
@@ -13,21 +8,15 @@ interface BookingDetailsProps {
   onClose: () => void;
 }
 
-interface BookingDetailsData {
-  customerName: string;
-  startDate: string;
-  endDate: string;
-  pickupReturnStationId: string;
-}
-
 const BookingDetails = ({
   bookingId,
   stationId,
   stations,
   onClose,
 }: BookingDetailsProps) => {
-  const [bookingDetails, setBookingDetails] =
-    useState<BookingDetailsData | null>(null);
+  const [bookingDetails, setBookingDetails] = useState<
+    Station["bookings"][0] | null
+  >(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,6 +27,7 @@ const BookingDetails = ({
         const data = await getBookingDetails(stationId, bookingId);
         setBookingDetails(data);
       } catch (err) {
+        console.error(err);
         setError("Failed to fetch booking details.");
       } finally {
         setLoading(false);

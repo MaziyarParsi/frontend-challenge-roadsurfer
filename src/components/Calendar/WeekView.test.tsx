@@ -21,6 +21,7 @@ describe("WeekView", () => {
         startDate: "2024-01-01T10:00:00.000Z",
         endDate: "2024-01-01T12:00:00.000Z",
         pickupReturnStationId: "1",
+        customerName: "John Doe",
       },
     ],
   };

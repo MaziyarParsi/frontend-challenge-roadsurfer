@@ -4,17 +4,7 @@ import DayTile from "./DayTile";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import Modal from "../Modal/Modal";
 import BookingDetails from "../Modal/BookingDetails";
-
-interface Station {
-  id: string;
-  name: string;
-  bookings: Array<{
-    id: string;
-    startDate: string;
-    endDate: string;
-    pickupReturnStationId: string;
-  }>;
-}
+import type { Station } from "../../services/api";
 
 interface Booking {
   id: string;
